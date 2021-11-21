@@ -30,8 +30,9 @@
   font-size: 25px;
 }
 .password-description{
-  margin: 10px 0px;
+  margin: 10px 0px;  
 }
+
 .green-bg{
   color: rgb(255, 255, 255);
   background-color: rgb(0, 163, 22);
@@ -41,11 +42,11 @@
   background-color: rgb(218, 15, 15);
 }
 .password-actions{
-  font-size: 30px;
+  font-size: 20px;
   text-align: right;
 }
 .copy-btn{
-  margin-right:20px;
+  margin-right:5px;
   background-color: transparent;
   border: none;
   color: #ffff;
