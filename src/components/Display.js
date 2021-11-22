@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import Slider from './contents/slider/Slider'
 import Checkbox from './contents/checkbox/Checkbox'
 import randomstring from 'randomstring'
@@ -72,31 +72,54 @@ const Display = () => {
     const [passwordStrengthClass, setStrengthClass] = useState('red-bg');
     const [passwordStrength, setStrength] = useState('Weak');
     const [checkboxDisabled, setDisabled] = useState(false);
+    const [checkboxDisabledName, setDisabledName] = useState("");
 
     const checkBoxChangeGenerate = () => {
-        setDisabled(false);
-        let allowedCharacters="";
-        if(checkbox.numbers){
-            allowedCharacters+="1234567890"
+        checkBoxCount();
+        let allowedCharacters = "";
+        if (checkbox.numbers) {
+            allowedCharacters += "1234567890"
         }
-        if(checkbox.lowercase){
-            allowedCharacters+="abcdefghijklmnopqrstuvwxyz"
+        if (checkbox.lowercase) {
+            allowedCharacters += "abcdefghijklmnopqrstuvwxyz"
         }
-        if(checkbox.uppercase){
-            allowedCharacters+="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        if (checkbox.uppercase) {
+            allowedCharacters += "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         }
-        if(checkbox.symbols){
-            allowedCharacters+="!@#$%^&*()?><{}_-][\|"
+        if (checkbox.symbols) {
+            allowedCharacters += "!@#$%^&*()?><{}_-][\|"
         }
         changePassword(randomstring.generate({
             length: length,
-            charset:allowedCharacters
+            charset: allowedCharacters
         }));
     }
-
+    const checkBoxCount = () => {
+        const checkCount = Object.keys(checkbox).filter(key => checkbox[key]);
+        const disabled = checkCount.length === 1;
+        const name = checkCount[0];
+        if (disabled) {
+            setDisabled(true);
+            setDisabledName(name);
+        }
+        else {
+            setDisabled(false);
+            setDisabledName("");
+        }
+    }
     useEffect(() => {
         checkBoxChangeGenerate();
     }, [checkbox.numbers, checkbox.uppercase, checkbox.lowercase, checkbox.symbols]);
+
+    const copyToClipboard = str => {
+        const el = document.createElement('textarea');
+        el.value = `${password}`;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        alert("Copied!")
+      };
     return (
         <>
             <span>This is a password generator app</span>
@@ -110,8 +133,8 @@ const Display = () => {
                                 </div>
                                 <div className="col-md-6 password-actions">
                                     <span>
-                                        <button className="copy-btn"><i className="fa fa-clone"></i></button>
-                                        <button className="copy-btn"><i className="fa fa-undo"></i></button>
+                                        <button className="copy-btn" onClick={copyToClipboard}><i className="fa fa-clone"></i></button>
+                                        <button className="copy-btn" onClick={checkBoxChangeGenerate}><i className="fa fa-undo"></i></button>
                                     </span>
                                 </div>
                             </div>
@@ -136,10 +159,10 @@ const Display = () => {
                                     < Checkbox key={checkbox.id} name={checkbox.name} checked={checkbox.isChecked} value={checkbox.value} label={checkbox.label} onChange={checkboxChange} />
                                 ))
                             } */}
-                            < Checkbox key="0" name="uppercase" checked={checkbox.uppercase} label="Uppercase" disabled={checkboxDisabled} onChange={checkboxChange} />
-                            < Checkbox key="1" name="lowercase" checked={checkbox.lowercase} label="Lowercase" disabled={checkboxDisabled} onChange={checkboxChange} />
-                            < Checkbox key="2" name="numbers" checked={checkbox.numbers} label="Numeric" disabled={checkboxDisabled} onChange={checkboxChange} />
-                            < Checkbox key="3" name="symbols" checked={checkbox.symbols} label="Symbols" disabled={checkboxDisabled} onChange={checkboxChange} />
+                            < Checkbox key="0" name="uppercase" checked={checkbox.uppercase} label="Uppercase" disabled={checkboxDisabled && checkbox.uppercase && checkboxDisabledName === "uppercase"} onChange={checkboxChange} />
+                            < Checkbox key="1" name="lowercase" checked={checkbox.lowercase} label="Lowercase" disabled={checkboxDisabled && checkbox.lowercase && checkboxDisabledName === "lowercase"} onChange={checkboxChange} />
+                            < Checkbox key="2" name="numbers" checked={checkbox.numbers} label="Numeric" disabled={checkboxDisabled && checkbox.numbers && checkboxDisabledName === "numbers"} onChange={checkboxChange} />
+                            < Checkbox key="3" name="symbols" checked={checkbox.symbols} label="Symbols" disabled={checkboxDisabled && checkbox.symbols && checkboxDisabledName === "symbols"} onChange={checkboxChange} />
                         </div>
                     </div>
 
